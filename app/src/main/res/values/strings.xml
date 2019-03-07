@@ -1,3 +1,4 @@
 <resources>
-    <string name="app_name">Storyteller</string>
+    <string name="app_name" translatable="false">Storyteller</string>
+    <string name="dialog_title_string">Choose color theme</string>
 </resources>

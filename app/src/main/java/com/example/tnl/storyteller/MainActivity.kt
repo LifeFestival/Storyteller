@@ -1,16 +1,11 @@
 package com.example.tnl.storyteller
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.Resources
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v7.app.AlertDialog
 import android.view.Menu
 import android.view.MenuItem
-import com.skydoves.colorpickerpreference.ColorListener
-import com.skydoves.colorpickerpreference.ColorPickerDialog
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -25,12 +20,18 @@ class MainActivity : AppCompatActivity() {
     )
     private val massive: List<String> = listOf("0", "1/2", "1", "2", "3", "5", "8", "13")
     private val MY_SETTINGS = "mySettings"
-    private var pref: SharedPreferences? = null
+    private val THEME = "currentTheme"
+    private var colorPref: SharedPreferences? = null
+    private var currentTheme: Int = 0
+    private var themePref: SharedPreferences? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        pref = getSharedPreferences(MY_SETTINGS, Context.MODE_PRIVATE)
-        setTheme(pref!!.getInt(MY_SETTINGS, 0))
+        colorPref = getSharedPreferences(MY_SETTINGS, Context.MODE_PRIVATE)
+        themePref = getSharedPreferences(THEME, Context.MODE_PRIVATE)
+        currentTheme = themePref!!.getInt(THEME, 0)
+        setTheme(colorPref!!.getInt(MY_SETTINGS, 0))
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -55,19 +56,20 @@ class MainActivity : AppCompatActivity() {
 
         val list = themes.map { it.key }.toTypedArray()
 
-        builder.setSingleChoiceItems(list, 0) { _, which ->
+        builder.setSingleChoiceItems(list, currentTheme) { _, which ->
             val result = when (which) {
-                0 -> R.style.AppTheme
-                1 -> R.style.GreenTheme
-                2 -> R.style.BlueTheme
-                3 -> R.style.RedTheme
-                4 -> R.style.OrangeTheme
-                5 -> R.style.BlackTheme
+                0 -> Pair(R.style.AppTheme, 0)
+                1 -> Pair(R.style.GreenTheme, 1)
+                2 -> Pair(R.style.BlueTheme, 2)
+                3 -> Pair(R.style.RedTheme, 3)
+                4 -> Pair(R.style.OrangeTheme, 4)
+                5 -> Pair(R.style.BlackTheme, 5)
 
-                else -> R.style.AppTheme
+                else -> Pair(R.style.AppTheme, 0)
 
             }
-            pref!!.edit().putInt(MY_SETTINGS, result).apply()
+            colorPref!!.edit().putInt(MY_SETTINGS, result.first).apply()
+            themePref!!.edit().putInt(THEME, result.second).apply()
         }
             .setTitle("Выбор цветовой схемы")
             .setPositiveButton("Ок") { dialog, _ ->
