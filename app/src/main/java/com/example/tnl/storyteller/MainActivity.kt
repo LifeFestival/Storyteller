@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity() {
             colorPref!!.edit().putInt(MY_SETTINGS, result.first).apply()
             themePref!!.edit().putInt(THEME, result.second).apply()
         }
-            .setTitle("Выбор цветовой схемы")
+            .setTitle(getString(R.string.dialog_title_string))
             .setPositiveButton("Ок") { dialog, _ ->
                 dialog.cancel()
                 val intent = intent
